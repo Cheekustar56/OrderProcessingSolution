@@ -4,8 +4,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Reference OrderWeb but exclude its content files (like appsettings.json) -->
     <ProjectReference Include="..\OrderWeb\OrderWeb.csproj">
+      <!-- Exclude only content files (like appsettings.json) but keep DLLs -->
       <ExcludeAssets>contentFiles</ExcludeAssets>
     </ProjectReference>
 
@@ -18,5 +18,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
+
+    <!-- Explicitly exclude OrderWeb's appsettings.json from publish -->
+    <Content Remove="..\OrderWeb\appsettings.json" />
   </ItemGroup>
 </Project>
