@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Cheekustar56/OrderProcessingSolution.git'
+                git branch: 'master', url: 'https://github.com/Cheekustar56/OrderProcessingSolution.git'
             }
         }
 
