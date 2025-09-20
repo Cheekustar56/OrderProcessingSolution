@@ -8,8 +8,6 @@ using OrderWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;  // for Where(), OrderBy(), etc.
 
-
-
 public class Worker : BackgroundService
 {
     private readonly IServiceProvider _services;
@@ -21,28 +19,35 @@ public class Worker : BackgroundService
         _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        // Run your processing loop in the background
+        _ = Task.Run(async () =>
         {
-            using (var scope = _services.CreateScope())
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
-
-                var pendingOrders = await db.Orders
-                    .Where(o => o.Status == "Pending")
-                    .ToListAsync();
-
-                foreach (var order in pendingOrders)
+                using (var scope = _services.CreateScope())
                 {
-                    order.Status = "Processed";
-                    _logger.LogInformation($"Order {order.Id} processed at {DateTime.Now}");
+                    var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
+
+                    var pendingOrders = await db.Orders
+                        .Where(o => o.Status == "Pending")
+                        .ToListAsync();
+
+                    foreach (var order in pendingOrders)
+                    {
+                        order.Status = "Processed";
+                        _logger.LogInformation($"Order {order.Id} processed at {DateTime.Now}");
+                    }
+
+                    await db.SaveChangesAsync();
                 }
 
-                await db.SaveChangesAsync();
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
+        }, stoppingToken);
 
-            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
-        }
+        // Return immediately so Windows service reports "Started"
+        return Task.CompletedTask;
     }
 }
