@@ -7,14 +7,13 @@ pipeline {
         PROCESSOR_SERVICE = 'OrderProcessor'
     }
 
-    stages {
+   stages {
         stage('Checkout') {
             steps {
                 echo "Cloning repository..."
-                git url: 'https://github.com/Cheekustar56/order-processing-solution.git', branch: 'master'
+                git url: 'https://github.com/Cheekustar56/OrderProcessingSolution.git', branch: 'master'
             }
         }
-
         stage('Build OrderWeb') {
             steps {
                 // Build OrderWeb project
