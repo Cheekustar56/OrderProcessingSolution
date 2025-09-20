@@ -29,14 +29,39 @@ pipeline {
         }
 
         stage('Restart OrderProcessor Service') {
-            steps {
-                bat """
-                    sc stop ${PROCESSOR_SERVICE} || echo Service not running
-                    sc start ${PROCESSOR_SERVICE}
-                """
+    steps {
+        script {
+            def serviceName = "${PROCESSOR_SERVICE}"
+            def timeoutSeconds = 120 // wait up to 2 minutes
+            def interval = 5 // check every 5 seconds
+            def waited = 0
+
+            // Stop service if running
+            bat "sc stop ${serviceName} || echo Service not running"
+
+            // Start service
+            bat "sc start ${serviceName}"
+
+            // Wait until service status is RUNNING or timeout reached
+            while (waited < timeoutSeconds) {
+                def status = bat(returnStdout: true, script: "sc query ${serviceName} | findstr STATE").trim()
+                if (status.contains("RUNNING")) {
+                    echo "${serviceName} is now running."
+                    break
+                } else {
+                    echo "Waiting for ${serviceName} to start..."
+                    sleep(interval)
+                    waited += interval
+                }
             }
-        }
-    }
+
+            if (waited >= timeoutSeconds) {
+                error "Timeout reached while waiting for ${serviceName} to start."
+				}
+			}
+		}
+	}
+}
 
     post {
         success {
