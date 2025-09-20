@@ -1,6 +1,6 @@
 pipeline {
-    agent AppServerAgent
-
+    agent { label 'AppServerAgent' }
+    
     environment {
         BUILD_CONFIGURATION = 'Release'
         DEPLOY_BASE = 'C:\\DeployedApps'  // Base deployment folder on agent
