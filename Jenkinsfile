@@ -1,16 +1,16 @@
 pipeline {
     agent { label 'AppServerAgent' }
-    
+
     environment {
         BUILD_CONFIGURATION = 'Release'
-        DEPLOY_BASE = 'C:\\DeployedApps'  // Base deployment folder on agent
+        DEPLOY_PATH = 'C:\\DeployedApps\'
         PROCESSOR_SERVICE = 'OrderProcessor'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout from GitHub
+                echo "Cloning repository..."
                 git url: 'https://github.com/Cheekustar56/order-processing-solution.git', branch: 'master'
             }
         }
@@ -61,10 +61,10 @@ pipeline {
 
     post {
         success {
-            echo 'Build and deployment completed successfully!'
+            echo "Build and deployment completed successfully!"
         }
         failure {
-            echo 'Build or deployment failed!'
+            echo "Build or deployment failed. Check the logs!"
         }
     }
 }
