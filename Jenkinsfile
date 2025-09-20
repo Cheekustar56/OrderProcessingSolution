@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         BUILD_CONFIGURATION = 'Release'
-        DEPLOY_PATH = 'C:\\DeployedApps\'
+        DEPLOY_BASE = 'C:\\DeployedApps'  // Base deployment folder on agent
         PROCESSOR_SERVICE = 'OrderProcessor'
     }
 
