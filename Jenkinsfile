@@ -1,53 +1,70 @@
 pipeline {
-    agent { label 'AppServerAgent' }
+    agent AppServerAgent
 
     environment {
         BUILD_CONFIGURATION = 'Release'
-        DEPLOY_PATH = 'C:\\DeployedApps\\OrderWeb'
+        DEPLOY_BASE = 'C:\\DeployedApps'  // Base deployment folder on agent
         PROCESSOR_SERVICE = 'OrderProcessor'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo "Cloning repository..."
-                git url: 'https://github.com/Cheekustar56/OrderProcessingSolution.git', branch: 'master'
+                // Checkout from GitHub
+                git url: 'https://github.com/Cheekustar56/order-processing-solution.git', branch: 'master'
             }
         }
 
-        stage('Build Solution') {
+        stage('Build OrderWeb') {
             steps {
-                echo "Building solution..."
-                bat "dotnet build \"%WORKSPACE%\\OrderProcessingSolution.sln\" -c ${env.BUILD_CONFIGURATION}"
+                // Build OrderWeb project
+                bat "dotnet build \"%WORKSPACE%\\OrderWeb\\OrderWeb.csproj\" -c ${BUILD_CONFIGURATION}"
             }
         }
 
-        stage('Publish Web App') {
+        stage('Build OrderProcessor') {
             steps {
-                echo "Publishing OrderWeb..."
-                bat """
-                dotnet publish "%WORKSPACE%\\OrderWeb\\OrderWeb.csproj" -c ${env.BUILD_CONFIGURATION} -o ${env.DEPLOY_PATH}
-                """
+                // Build OrderProcessor project
+                bat "dotnet build \"%WORKSPACE%\\OrderProcessor\\OrderProcessor.csproj\" -c ${BUILD_CONFIGURATION}"
             }
         }
 
-        stage('Restart Processor Service') {
+        stage('Publish OrderWeb') {
             steps {
-                echo "Restarting Windows service: ${env.PROCESSOR_SERVICE}"
-                bat """
-                sc stop ${env.PROCESSOR_SERVICE} || echo Service not running
-                sc start ${env.PROCESSOR_SERVICE}
-                """
+                // Publish OrderWeb
+                bat "dotnet publish \"%WORKSPACE%\\OrderWeb\\OrderWeb.csproj\" -c ${BUILD_CONFIGURATION} -o \"${DEPLOY_BASE}\\OrderWeb\""
+            }
+        }
+
+        stage('Publish OrderProcessor') {
+            steps {
+                // Publish OrderProcessor
+                bat "dotnet publish \"%WORKSPACE%\\OrderProcessor\\OrderProcessor.csproj\" -c ${BUILD_CONFIGURATION} -o \"${DEPLOY_BASE}\\OrderProcessor\""
+            }
+        }
+
+        stage('Restart OrderProcessor Service') {
+            steps {
+                script {
+                    // Stop service if it exists
+                    bat """
+                    sc stop ${PROCESSOR_SERVICE} || echo Service not running
+                    """
+                    // Start service
+                    bat """
+                    sc start ${PROCESSOR_SERVICE}
+                    """
+                }
             }
         }
     }
 
     post {
         success {
-            echo "Build and deployment completed successfully!"
+            echo 'Build and deployment completed successfully!'
         }
         failure {
-            echo "Build or deployment failed. Check the logs!"
+            echo 'Build or deployment failed!'
         }
     }
 }
