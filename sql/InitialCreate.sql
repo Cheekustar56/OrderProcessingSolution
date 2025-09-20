@@ -1,0 +1,7 @@
+CREATE TABLE Orders (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Item NVARCHAR(200) NOT NULL,
+    Quantity INT NOT NULL,
+    Status NVARCHAR(50) NOT NULL,
+    CreatedAt DATETIME2 NOT NULL
+);

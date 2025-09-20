@@ -1,0 +1,28 @@
+@model IEnumerable<OrderWeb.Models.Order>
+@{
+    ViewData["Title"] = "Orders";
+}
+<h1>Orders</h1>
+<p><a href="/Orders/Create">Create New Order</a></p>
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead><tr><th>Id</th><th>Item</th><th>Qty</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+    <tbody>
+    @foreach(var o in Model) {
+        <tr>
+            <td>@o.Id</td>
+            <td>@o.Item</td>
+            <td>@o.Quantity</td>
+            <td>@o.Status</td>
+            <td>@o.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+            <td>
+                @if(o.Status != "Ready" && o.Status != "Processed") {
+                    <form method="post" action="/Orders/MarkReady">
+                        <input type="hidden" name="id" value="@o.Id" />
+                        <button type="submit">Mark Ready</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

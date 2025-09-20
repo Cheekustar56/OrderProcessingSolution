@@ -1,0 +1,8 @@
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net7.0\OrderWeb.csproj.AssemblyReference.cache
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net7.0\OrderWeb.GeneratedMSBuildEditorConfig.editorconfig
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net7.0\OrderWeb.AssemblyInfoInputs.cache
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net7.0\OrderWeb.AssemblyInfo.cs
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net7.0\OrderWeb.csproj.CoreCompileInputs.cache
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net7.0\OrderWeb.MvcApplicationPartsAssemblyInfo.cache
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net7.0\OrderWeb.RazorAssemblyInfo.cache
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net7.0\OrderWeb.RazorAssemblyInfo.cs
