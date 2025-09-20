@@ -3,20 +3,23 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using OrderWeb.Data;
 using Microsoft.Extensions.Configuration;
-using System;
+using Microsoft.Extensions.Logging;
 
 var host = Host.CreateDefaultBuilder(args)
-    // Ensure the host looks for configuration files in the folder where the DLL is deployed
-    .UseContentRoot(AppContext.BaseDirectory)
-    .ConfigureAppConfiguration((hostingContext, config) =>
-    {
-        config.SetBasePath(AppContext.BaseDirectory);
-    })
+    .UseWindowsService() // Enables running as a Windows service
     .ConfigureServices((context, services) =>
     {
+        // Configure EF Core DbContext
         services.AddDbContext<OrderDbContext>(options =>
             options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
+
+        // Register the Worker
         services.AddHostedService<Worker>();
+    })
+    .ConfigureLogging(logging =>
+    {
+        logging.ClearProviders();
+        logging.AddConsole(); // You can add file logging if needed
     })
     .Build();
 

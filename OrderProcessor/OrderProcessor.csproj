@@ -1,20 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Reference OrderWeb project DLLs only -->
+    <!-- Reference OrderWeb DLLs -->
     <ProjectReference Include="..\OrderWeb\OrderWeb.csproj">
       <Private>true</Private> <!-- Copy DLLs -->
-      <ExcludeAssets>contentFiles</ExcludeAssets> <!-- Prevent copying appsettings.json from OrderWeb -->
+      <ExcludeAssets>contentFiles</ExcludeAssets> <!-- Avoid duplicate appsettings.json -->
     </ProjectReference>
 
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Include OrderProcessor's own appsettings -->
+    <!-- Keep only local appsettings.json -->
     <None Update="appsettings.Processor.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

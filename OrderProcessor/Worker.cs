@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OrderWeb.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;  // for Where(), OrderBy(), etc.
+using System.Linq;
 
 public class Worker : BackgroundService
 {
@@ -19,12 +19,13 @@ public class Worker : BackgroundService
         _logger = logger;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // Run your processing loop in the background
-        _ = Task.Run(async () =>
+        _logger.LogInformation("OrderProcessor Worker started at: {time}", DateTimeOffset.Now);
+
+        while (!stoppingToken.IsCancellationRequested)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
                 using (var scope = _services.CreateScope())
                 {
@@ -32,7 +33,7 @@ public class Worker : BackgroundService
 
                     var pendingOrders = await db.Orders
                         .Where(o => o.Status == "Pending")
-                        .ToListAsync();
+                        .ToListAsync(stoppingToken);
 
                     foreach (var order in pendingOrders)
                     {
@@ -40,14 +41,17 @@ public class Worker : BackgroundService
                         _logger.LogInformation($"Order {order.Id} processed at {DateTime.Now}");
                     }
 
-                    await db.SaveChangesAsync();
+                    await db.SaveChangesAsync(stoppingToken);
                 }
-
-                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
-        }, stoppingToken);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing orders");
+            }
 
-        // Return immediately so Windows service reports "Started"
-        return Task.CompletedTask;
+            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+        }
+
+        _logger.LogInformation("OrderProcessor Worker stopping at: {time}", DateTimeOffset.Now);
     }
 }
