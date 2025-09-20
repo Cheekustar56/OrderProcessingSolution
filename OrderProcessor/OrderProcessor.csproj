@@ -4,10 +4,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Reference OrderWeb but exclude its content files to avoid conflicts -->
+    <!-- Reference OrderWeb but exclude content files to avoid conflicts -->
     <ProjectReference Include="..\OrderWeb\OrderWeb.csproj">
       <ExcludeAssets>contentFiles</ExcludeAssets>
-      <Private>false</Private>
+      <Private>true</Private> <!-- ensures the DLL is copied to output -->
     </ProjectReference>
 
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
