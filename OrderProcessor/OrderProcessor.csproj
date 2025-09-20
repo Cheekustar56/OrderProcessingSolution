@@ -4,22 +4,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Reference OrderWeb but exclude content files to avoid conflicts -->
     <ProjectReference Include="..\OrderWeb\OrderWeb.csproj">
-      <!-- Exclude only content files (like appsettings.json) but keep DLLs -->
       <ExcludeAssets>contentFiles</ExcludeAssets>
+      <Private>false</Private>
     </ProjectReference>
 
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Only include the local appsettings.json for OrderProcessor -->
+    <!-- Only include the local OrderProcessor appsettings.json -->
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
 
-    <!-- Explicitly exclude OrderWeb's appsettings.json from publish -->
+    <!-- Remove any OrderWeb appsettings.json from the publish output -->
     <Content Remove="..\OrderWeb\appsettings.json" />
   </ItemGroup>
 </Project>
