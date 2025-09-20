@@ -2,18 +2,22 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\OrderWeb\OrderWeb.csproj" />
+    <!-- Reference OrderWeb project, but exclude its content files (like appsettings.json) -->
+    <ProjectReference Include="..\OrderWeb\OrderWeb.csproj" ExcludeAssets="contentFiles" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
   </ItemGroup>
-  <ItemGroup>
-  <None Update="appsettings.json">
-    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </None>
-</ItemGroup>
-<ItemGroup>
-  <Content Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" />
-  <Content Update="..\OrderWeb\appsettings.json" CopyToPublishDirectory="Never" />
-</ItemGroup>
 
+  <ItemGroup>
+    <!-- Ensure OrderProcessor appsettings.json is copied to output -->
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Ensure OrderProcessor appsettings.json is published -->
+    <Content Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
