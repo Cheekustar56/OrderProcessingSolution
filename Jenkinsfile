@@ -1,25 +1,49 @@
 pipeline {
-    agent none
+    agent { label 'AppServerAgent' }
+
+    environment {
+        SOLUTION_PATH = 'C:\\JenkinsAgent\\workspace\\My First Jenkins Job'
+        BUILD_CONFIGURATION = 'Release'
+        DEPLOY_WEB_PATH = 'C:\\DeployedApps\\OrderWeb'
+        DEPLOY_PROCESSOR_PATH = 'C:\\DeployedApps\\OrderProcessor'
+        PROCESSOR_SERVICE = 'OrderProcessor'
+    }
+
     stages {
-        stage('Build') {
-            agent { label 'master' }
+        stage('Checkout') {
             steps {
-                bat 'dotnet restore'
-                bat 'dotnet build OrderProcessingSolution.sln -c Release'
-                bat 'dotnet publish OrderWeb -c Release -o C:\Jenkins\artifacts\OrderWeb'
-                bat 'dotnet publish OrderProcessor -c Release -o C:\Jenkins\artifacts\OrderProcessor'
+                git branch: 'master', url: 'https://github.com/Cheekustar56/OrderProcessingSolution.git'
             }
         }
-        stage('Deploy') {
-            agent { label 'appserver' }
+
+        stage('Build & Publish OrderWeb') {
             steps {
-                bat '''
-                xcopy C:\Jenkins\artifacts\OrderWeb C:\inetpub\wwwroot\OrderWeb /E /I /Y
-                powershell Restart-WebAppPool -Name "DefaultAppPool"
-                xcopy C:\Jenkins\artifacts\OrderProcessor C:\Services\OrderProcessor /E /I /Y
-                nssm restart OrderProcessorService
-                '''
+                bat "dotnet publish \"${SOLUTION_PATH}\\OrderWeb\\OrderWeb.csproj\" -c ${BUILD_CONFIGURATION} -o \"${DEPLOY_WEB_PATH}\""
             }
+        }
+
+        stage('Build & Publish OrderProcessor') {
+            steps {
+                bat "dotnet publish \"${SOLUTION_PATH}\\OrderProcessor\\OrderProcessor.csproj\" -c ${BUILD_CONFIGURATION} -o \"${DEPLOY_PROCESSOR_PATH}\""
+            }
+        }
+
+        stage('Restart OrderProcessor Service') {
+            steps {
+                bat """
+                    sc stop ${PROCESSOR_SERVICE} || echo Service not running
+                    sc start ${PROCESSOR_SERVICE}
+                """
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and deployment completed successfully!'
+        }
+        failure {
+            echo 'Build or deployment failed!'
         }
     }
 }
