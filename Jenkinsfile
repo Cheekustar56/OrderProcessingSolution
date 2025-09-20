@@ -1,5 +1,7 @@
 pipeline {
-    agent { label 'AppServerAgent' }  // Your Windows agent
+    agent {
+        label 'AppServerAgent' // Your Windows agent label
+    }
 
     environment {
         SOLUTION_PATH = 'D:\\Tech Trainings\\Jenkins\\order_processing_solution'
@@ -11,35 +13,31 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/Cheekustar56/OrderProcessingSolution.git'
+                git branch: 'main', url: 'https://github.com/Cheekustar56/OrderProcessingSolution.git'
             }
         }
 
-        stage('Build Solution') {
+        stage('Build') {
             steps {
-                bat "dotnet build ${SOLUTION_PATH}\\OrderProcessingSolution.sln -c ${BUILD_CONFIGURATION}"
+                bat "dotnet build \"${env.SOLUTION_PATH}\\OrderProcessingSolution.sln\" -c ${env.BUILD_CONFIGURATION}"
             }
         }
 
         stage('Publish Web App') {
             steps {
-                bat """
-                    dotnet publish ${SOLUTION_PATH}\\OrderWeb\\OrderWeb.csproj -c ${BUILD_CONFIGURATION} -o ${DEPLOY_PATH}
-                """
+                bat "dotnet publish \"${env.SOLUTION_PATH}\\OrderWeb\\OrderWeb.csproj\" -c ${env.BUILD_CONFIGURATION} -o \"${env.DEPLOY_PATH}\""
             }
         }
 
-        stage('Deploy & Restart Service') {
+        stage('Restart Windows Service') {
             steps {
-                echo "Stopping OrderProcessor service..."
-                bat "sc stop ${PROCESSOR_SERVICE} || echo Service not running"
-                
-                echo "Deploying new version..."
-                // Optional: Clean deploy directory first
-                bat "xcopy /E /Y ${DEPLOY_PATH}\\* ${DEPLOY_PATH}\\"
-
-                echo "Starting OrderProcessor service..."
-                bat "sc start ${PROCESSOR_SERVICE}"
+                // Stop the processor service if running
+                bat """
+                if exist \"${env.DEPLOY_PATH}\" (
+                    net stop ${env.PROCESSOR_SERVICE} || echo Service not running
+                    net start ${env.PROCESSOR_SERVICE}
+                )
+                """
             }
         }
     }
@@ -49,7 +47,7 @@ pipeline {
             echo 'Deployment completed successfully!'
         }
         failure {
-            echo 'Deployment failed. Check the logs.'
+            echo 'Deployment failed. Check the logs!'
         }
     }
 }
