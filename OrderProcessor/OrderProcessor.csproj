@@ -4,17 +4,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Reference OrderWeb project; copy DLLs but avoid conflicts -->
+    <!-- Reference OrderWeb project DLLs only -->
     <ProjectReference Include="..\OrderWeb\OrderWeb.csproj">
-      <Private>true</Private> <!-- Copy DLLs only -->
-      <ExcludeAssets>contentFiles</ExcludeAssets> <!-- Prevent copying OrderWeb appsettings.json -->
+      <Private>true</Private> <!-- Copy DLLs -->
+      <ExcludeAssets>contentFiles</ExcludeAssets> <!-- Prevent copying appsettings.json from OrderWeb -->
     </ProjectReference>
 
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Use a renamed appsettings file for OrderProcessor to avoid conflict -->
+    <!-- Include OrderProcessor's own appsettings -->
     <None Update="appsettings.Processor.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

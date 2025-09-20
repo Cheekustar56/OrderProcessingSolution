@@ -3,16 +3,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using OrderWeb.Data;
 using Microsoft.Extensions.Configuration;
+using System;
 
 var host = Host.CreateDefaultBuilder(args)
+    // Ensure the host looks for configuration files in the folder where the DLL is deployed
+    .UseContentRoot(AppContext.BaseDirectory)
     .ConfigureAppConfiguration((hostingContext, config) =>
     {
-        // Remove default appsettings.json if needed
-        config.Sources.Clear();
-
-        // Load the renamed appsettings file
-        config.AddJsonFile("appsettings.Processor.json", optional: false, reloadOnChange: true)
-              .AddEnvironmentVariables();
+        config.SetBasePath(AppContext.BaseDirectory);
     })
     .ConfigureServices((context, services) =>
     {
