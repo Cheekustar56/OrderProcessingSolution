@@ -3226,7 +3226,8 @@
           "targetAlias": "net8.0",
           "projectReferences": {
             "D:\\Tech Trainings\\Jenkins\\order_processing_solution\\OrderWeb\\OrderWeb.csproj": {
-              "projectPath": "D:\\Tech Trainings\\Jenkins\\order_processing_solution\\OrderWeb\\OrderWeb.csproj"
+              "projectPath": "D:\\Tech Trainings\\Jenkins\\order_processing_solution\\OrderWeb\\OrderWeb.csproj",
+              "excludeAssets": "contentfiles"
             }
           }
         }

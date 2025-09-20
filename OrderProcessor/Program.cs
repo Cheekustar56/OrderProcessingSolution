@@ -4,8 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using OrderWeb.Data;
 using Microsoft.Extensions.Configuration;
 
-
 var host = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((hostingContext, config) =>
+    {
+        // Remove default appsettings.json if needed
+        config.Sources.Clear();
+
+        // Load the renamed appsettings file
+        config.AddJsonFile("appsettings.Processor.json", optional: false, reloadOnChange: true)
+              .AddEnvironmentVariables();
+    })
     .ConfigureServices((context, services) =>
     {
         services.AddDbContext<OrderDbContext>(options =>
