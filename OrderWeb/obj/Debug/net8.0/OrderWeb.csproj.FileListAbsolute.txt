@@ -69,3 +69,4 @@ D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net8.0\re
 D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net8.0\OrderWeb.pdb
 D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net8.0\OrderWeb.genruntimeconfig.cache
 D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net8.0\ref\OrderWeb.dll
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderWeb\obj\Debug\net8.0\OrderWeb.sourcelink.json

@@ -58,3 +58,8 @@ D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\obj\Debug\net
 D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\obj\Debug\net8.0\OrderProcessor.pdb
 D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\obj\Debug\net8.0\OrderProcessor.genruntimeconfig.cache
 D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\obj\Debug\net8.0\ref\OrderProcessor.dll
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\bin\Debug\net8.0\appsettings.Processor.json
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\bin\Debug\net8.0\Microsoft.Extensions.Hosting.WindowsServices.dll
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\bin\Debug\net8.0\System.ServiceProcess.ServiceController.dll
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.ServiceProcess.ServiceController.dll
+D:\Tech Trainings\Jenkins\order_processing_solution\OrderProcessor\obj\Debug\net8.0\OrderProcessor.sourcelink.json

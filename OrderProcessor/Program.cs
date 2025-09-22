@@ -4,22 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using OrderWeb.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
 
-var host = Host.CreateDefaultBuilder(args)
-    .UseWindowsService() // Enables running as a Windows service
+IHost host = Host.CreateDefaultBuilder(args)
+    .UseContentRoot(AppContext.BaseDirectory) // ensures configs are found
+    .UseWindowsService()                      // run as Windows Service
     .ConfigureServices((context, services) =>
     {
-        // Configure EF Core DbContext
         services.AddDbContext<OrderDbContext>(options =>
             options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
-
-        // Register the Worker
         services.AddHostedService<Worker>();
-    })
-    .ConfigureLogging(logging =>
-    {
-        logging.ClearProviders();
-        logging.AddConsole(); // You can add file logging if needed
     })
     .Build();
 
